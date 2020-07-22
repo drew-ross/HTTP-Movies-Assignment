@@ -64,8 +64,10 @@ const MovieUpdateForm = (props) => {
 
   return (
     <div className='MovieUpdateForm'>
+      <h2>Edit Movie Details</h2>
       <form onSubmit={handleUpdate}>
         <label htmlFor='title'>Title</label>
+        <br/>
         <input
           id='title'
           name='title'
@@ -74,6 +76,7 @@ const MovieUpdateForm = (props) => {
         />
         <br />
         <label htmlFor='director'>Director</label>
+        <br/>
         <input
           id='director'
           name='director'
@@ -82,6 +85,7 @@ const MovieUpdateForm = (props) => {
         />
         <br />
         <label htmlFor='metascore'>Metascore</label>
+        <br/>
         <input
           id='metascore'
           name='metascore'
@@ -92,7 +96,7 @@ const MovieUpdateForm = (props) => {
           onChange={handleChanges}
         />
         <br />
-        <button>Submit</button>
+        <button className='movie-button normal-button'>Submit</button>
       </form>
     </div>
   );

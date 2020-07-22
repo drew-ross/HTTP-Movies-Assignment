@@ -61,9 +61,10 @@ body {
   padding: 5px 10px;
   background-color: lightseagreen;
 }
-.save-button:hover {
+.movie-button:hover {
   background-color: green;
   color: white;
+  cursor: pointer;
 }
 
 .home-button {
@@ -82,4 +83,23 @@ body {
 
 .movie-button.delete-button {
   top: 115px;
+}
+
+.movie-button.normal-button {
+  position: static;
+}
+
+.MovieUpdateForm {
+  margin: 0 auto;
+  width: 20rem;
+}
+
+.MovieUpdateForm label {
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  margin: .2rem 0 1rem;
+  padding: .2rem;
 }
