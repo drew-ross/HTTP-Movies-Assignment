@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
+
+import { updatedStateWithResponse } from '../utils/updatedState';
 
 const initialFormValues = {
   title: '',
@@ -12,6 +14,7 @@ const MovieUpdateForm = (props) => {
 
   const [formValues, setFormValues] = useState(initialFormValues);
   const params = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     if (props.movieList.length > 0) {
@@ -36,10 +39,12 @@ const MovieUpdateForm = (props) => {
   const handleUpdate = e => {
     e.preventDefault();
     const putValues = formatValuesForPut();
-    console.log(putValues);
     axios
       .put(`http://localhost:5000/api/movies/${params.id}`, putValues)
-      .then(res => props.setMovieList(updatedStateWithResponse(props.movieList, res.data)))
+      .then(res => {
+        props.setMovieList(updatedStateWithResponse(props.movieList, res.data));
+        history.push(`/movies/${params.id}`);
+      })
       .catch(err => console.log(err));
   };
 
@@ -55,16 +60,6 @@ const MovieUpdateForm = (props) => {
       metascore: Number(formValues.metascore),
       stars: getCurrentMovie(props.movieList).stars
     };
-  };
-
-  const updatedStateWithResponse = (state, update) => {
-    return state.map(item => {
-      if (item.id === update.id) {
-        return update;
-      } else {
-        return item;
-      }
-    });
   };
 
   return (
