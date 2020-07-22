@@ -6,23 +6,23 @@ const initialFormValues = {
   title: '',
   director: '',
   metascore: 0,
-}
+};
 
 const MovieUpdateForm = (props) => {
 
   const [formValues, setFormValues] = useState(initialFormValues);
   const params = useParams();
-  
+
   useEffect(() => {
     if (props.movieList.length > 0) {
-      setFormValuesToCurrentMovie(props.movieList);
+      setFormValues(getCurrentMovie(props.movieList));
     } else {
       axios.get('http://localhost:5000/api/movies')
         .then(res => {
           props.setMovieList(res.data);
-          setFormValuesToCurrentMovie(res.data);
+          setFormValues(getCurrentMovie(res.data));
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
     }
   }, []);
 
@@ -35,26 +35,41 @@ const MovieUpdateForm = (props) => {
 
   const handleUpdate = e => {
     e.preventDefault();
+    const putValues = formatValuesForPut();
+    console.log(putValues);
     axios
-      .put(``)
-  }
+      .put(`http://localhost:5000/api/movies/${params.id}`, putValues)
+      .then(res => props.setMovieList(updatedStateWithResponse(props.movieList, res.data)))
+      .catch(err => console.log(err));
+  };
 
-  const setFormValuesToCurrentMovie = (sourceObj) => {
-    setFormValues(sourceObj.filter(movie => movie.id === Number(params.id))[0]);
+  const getCurrentMovie = (sourceObj) => {
+    return sourceObj.filter(movie => movie.id === Number(params.id))[0];
   };
 
   const formatValuesForPut = () => {
     return {
+      id: Number(params.id),
       title: formValues.title.trim(),
       director: formValues.director.trim(),
       metascore: Number(formValues.metascore),
-      stars: props.movieList.filter(movie => movie.id === params.id).stars
-    }
-  }
+      stars: getCurrentMovie(props.movieList).stars
+    };
+  };
+
+  const updatedStateWithResponse = (state, update) => {
+    return state.map(item => {
+      if (item.id === update.id) {
+        return update;
+      } else {
+        return item;
+      }
+    });
+  };
 
   return (
     <div className='MovieUpdateForm'>
-      <form>
+      <form onSubmit={handleUpdate}>
         <label htmlFor='title'>Title</label>
         <input
           id='title'
@@ -62,7 +77,7 @@ const MovieUpdateForm = (props) => {
           value={formValues.title}
           onChange={handleChanges}
         />
-        <br/>
+        <br />
         <label htmlFor='director'>Director</label>
         <input
           id='director'
@@ -70,7 +85,7 @@ const MovieUpdateForm = (props) => {
           value={formValues.director}
           onChange={handleChanges}
         />
-        <br/>
+        <br />
         <label htmlFor='metascore'>Metascore</label>
         <input
           id='metascore'
@@ -81,7 +96,7 @@ const MovieUpdateForm = (props) => {
           value={formValues.metascore}
           onChange={handleChanges}
         />
-        <br/>
+        <br />
         <button>Submit</button>
       </form>
     </div>
